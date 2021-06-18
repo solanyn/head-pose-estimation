@@ -2,12 +2,13 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 
+DATA_DIR = './modified_data/'
 
-def make_tilt_train_generator(data_dir, train_data_df):
+def make_tilt_train_generator(train_data_df):
     train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_data_df,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col="filename",
         y_col='tilt_str',
         target_size=(64, 64),
@@ -18,11 +19,11 @@ def make_tilt_train_generator(data_dir, train_data_df):
     )
     return train_generator
 
-def make_pan_train_generator(data_dir, train_data_df):
+def make_pan_train_generator(train_data_df):
     train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_data_df,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col="filename",
         y_col='pan_str',
         target_size=(64, 64),
@@ -33,11 +34,11 @@ def make_pan_train_generator(data_dir, train_data_df):
     )
     return train_generator
 
-def make_tilt_val_generator(data_dir, val_data_df):
+def make_tilt_val_generator(DATA_DIR, val_data_df):
     datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     generator = datagen.flow_from_dataframe(
         dataframe=val_data_df,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col="filename",
         y_col='tilt_str',
         target_size=(64, 64),
@@ -48,11 +49,11 @@ def make_tilt_val_generator(data_dir, val_data_df):
     )
     return generator
 
-def make_pan_val_generator(data_dir, val_data_df):
+def make_pan_val_generator(DATA_DIR, val_data_df):
    datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
    generator = datagen.flow_from_dataframe(
        dataframe=val_data_df,
-       directory=data_dir,
+       directory=DATA_DIR,
        x_col="filename",
        y_col='pan_str',
        target_size=(64, 64),
@@ -63,11 +64,11 @@ def make_pan_val_generator(data_dir, val_data_df):
    )
    return generator
 
-def make_test_generator(data_dir, test_data):
+def make_test_generator(DATA_DIR, test_data):
     test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     test_generator = test_datagen.flow_from_dataframe(
         dataframe=test_data,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col='filename',
         target_size=(64, 64),
         batch_size=1,
@@ -92,11 +93,11 @@ def augment(image, label):
 
 
 
-def make_tilt_train_generator(data_dir, train_data_df):
+def make_tilt_train_generator(DATA_DIR, train_data_df):
     train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_data_df,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col="filename",
         y_col='tilt_str',
         target_size=(64, 64),
@@ -107,11 +108,11 @@ def make_tilt_train_generator(data_dir, train_data_df):
     )
     return train_generator
 
-def make_pan_train_generator(data_dir, train_data_df):
+def make_pan_train_generator(DATA_DIR, train_data_df):
     train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_data_df,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col="filename",
         y_col='pan_str',
         target_size=(64, 64),
@@ -122,11 +123,11 @@ def make_pan_train_generator(data_dir, train_data_df):
     )
     return train_generator
 
-def make_tilt_val_generator(data_dir, val_data_df):
+def make_tilt_val_generator(DATA_DIR, val_data_df):
     datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     generator = datagen.flow_from_dataframe(
         dataframe=val_data_df,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col="filename",
         y_col='tilt_str',
         target_size=(64, 64),
@@ -137,11 +138,11 @@ def make_tilt_val_generator(data_dir, val_data_df):
     )
     return generator
 
-def make_pan_val_generator(data_dir, val_data_df):
+def make_pan_val_generator(DATA_DIR, val_data_df):
    datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
    generator = datagen.flow_from_dataframe(
        dataframe=val_data_df,
-       directory=data_dir,
+       directory=DATA_DIR,
        x_col="filename",
        y_col='pan_str',
        target_size=(64, 64),
@@ -152,11 +153,11 @@ def make_pan_val_generator(data_dir, val_data_df):
    )
    return generator
 
-def make_test_generator(data_dir, test_data):
+def make_test_generator(DATA_DIR, test_data):
     test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     test_generator = test_datagen.flow_from_dataframe(
         dataframe=test_data,
-        directory=data_dir,
+        directory=DATA_DIR,
         x_col='filename',
         target_size=(64, 64),
         batch_size=1,
