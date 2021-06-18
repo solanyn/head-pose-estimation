@@ -1,11 +1,7 @@
 import tensorflow as tf
 
-
 assert tf.__version__[0] == '2'
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-num_tilt_classes = None
-num_pan_classes = None
 
 class ResidualBlock(tf.keras.layers.Layer):
     # Initialize components of the model
@@ -146,102 +142,3 @@ class BottleneckResidualBlock(tf.keras.layers.Layer):
         })
         return config
 
-def get_resnet_model(class_, filters, block_size, reg_lambda=0.0, fdropout=False):
-    input = tf.keras.Input(
-        shape=(64,64,3)
-    )
-
-    assert class_ == "tilt" or class_ == "pan"
-    assert num_tilt_classes is not None and num_pan_classes is not None
-
-    x = tf.keras.layers.Conv2D(filters=64,
-                                   kernel_size=(3, 3),
-                                   strides=1,
-                                   kernel_initializer="he_normal",
-                                   kernel_regularizer=tf.keras.regularizers.l2(reg_lambda),
-                                   padding="same")(input)
-  
-    x = tf.keras.layers.BatchNormalization()(x)
-  
-    for nFilters, nBlocks in zip(filters, block_size):
-       x = ResidualBlock(nFilters, stride=2, reg_lambda=reg_lambda)(x)
-
-    for _ in range(1, nBlocks):
-        x = ResidualBlock(nFilters, stride=1, reg_lambda=reg_lambda)(x)
-
-    # Final part
-    x = tf.keras.layers.GlobalAveragePooling2D()(x)
-    x = tf.keras.layers.Flatten()(x)
-
-    if fdropout:
-       x = tf.keras.layers.Dropout(0.5)(x)
-  
-    if class_ == "tilt":
-        output = tf.keras.layers.Dense(num_tilt_classes, activation=tf.nn.softmax, kernel_regularizer=tf.keras.regularizers.l2(reg_lambda), kernel_initializer="he_normal")(x)
-    else:
-        output = tf.keras.layers.Dense(num_pan_classes, activation=tf.nn.softmax, kernel_regularizer=tf.keras.regularizers.l2(reg_lambda), kernel_initializer="he_normal")(x)
-
-    return tf.keras.Model(input, output)
-
-def get_bottleneck_resnet_model(class_, filters, block_size, reg_lambda=0.0, fdropout=False):
-    input = tf.keras.Input(
-        shape=(64,64,3)
-    )
-
-    assert class_ == "tilt" or class_ == "pan"
-
-    # Additional batch normalisation layer
-    x = tf.keras.layers.BatchNormalization()(input)
-
-    x = tf.keras.layers.Conv2D(filters=64,
-                                   kernel_size=(5, 5),
-                                   strides=1,
-                                   kernel_initializer="he_normal",
-                                   kernel_regularizer=tf.keras.regularizers.l2(reg_lambda),
-                                   padding="same")(x)
-    x = tf.keras.layers.BatchNormalization()(x)
-    x = tf.nn.relu(x)
-    x = tf.keras.layers.ZeroPadding2D((1,1))(x)
-    x = tf.keras.layers.MaxPooling2D((3,3), strides=(2,2))(x)
-
-    x = tf.keras.layers.Conv2D(filters=64,
-                                   kernel_size=(3, 3),
-                                   strides=1,
-                                   kernel_initializer="he_normal",
-                                   kernel_regularizer=tf.keras.regularizers.l2(reg_lambda),
-                                   padding="same")(input)
-  
-
-  
-    for nFilters, nBlocks in zip(filters, block_size):
-        # Reduce dimensions in these blocks
-        stride = 2
-        if nFilters == filters[0]:
-            stride = 1
-        x = BottleneckResidualBlock(nFilters, stride=stride, reg_lambda=reg_lambda, dropout=fdropout)(x)
-
-        for _ in range(1, nBlocks):
-            x = BottleneckResidualBlock(nFilters, stride=1, reg_lambda=reg_lambda, dropout=fdropout)(x)
-  
-    # Final part
-    x = tf.keras.layers.BatchNormalization()(x)
-    x = tf.nn.relu(x)
-    x = tf.keras.layers.GlobalAveragePooling2D()(x)
-    x = tf.keras.layers.Flatten()(x)
-  
-    if class_ == "tilt":
-        output = tf.keras.layers.Dense(num_tilt_classes, activation=tf.nn.softmax, kernel_regularizer=tf.keras.regularizers.l2(reg_lambda), kernel_initializer="he_normal")(x)
-    else:
-        output = tf.keras.layers.Dense(num_pan_classes, activation=tf.nn.softmax, kernel_regularizer=tf.keras.regularizers.l2(reg_lambda), kernel_initializer="he_normal")(x)
-
-    return tf.keras.Model(input, output)
-
-def get_callbacks(name, logdir, early_stop=True):
-    print(name)
-    if early_stop:
-        return [
-            tf.keras.callbacks.EarlyStopping(monitor='val_CategoricalCrossentropy', patience=25),
-            tf.keras.callbacks.TensorBoard(logdir/name, histogram_freq=60, embeddings_freq=60)
-        ]
-    else:
-        return [tf.keras.callbacks.TensorBoard(logdir/name)]
