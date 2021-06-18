@@ -34,7 +34,7 @@ def make_pan_train_generator(train_data_df):
     )
     return train_generator
 
-def make_tilt_val_generator(DATA_DIR, val_data_df):
+def make_tilt_val_generator(val_data_df):
     datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     generator = datagen.flow_from_dataframe(
         dataframe=val_data_df,
@@ -49,7 +49,7 @@ def make_tilt_val_generator(DATA_DIR, val_data_df):
     )
     return generator
 
-def make_pan_val_generator(DATA_DIR, val_data_df):
+def make_pan_val_generator(val_data_df):
    datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
    generator = datagen.flow_from_dataframe(
        dataframe=val_data_df,
@@ -64,7 +64,7 @@ def make_pan_val_generator(DATA_DIR, val_data_df):
    )
    return generator
 
-def make_test_generator(DATA_DIR, test_data):
+def make_test_generator(test_data):
     test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     test_generator = test_datagen.flow_from_dataframe(
         dataframe=test_data,
@@ -93,7 +93,7 @@ def augment(image, label):
 
 
 
-def make_tilt_train_generator(DATA_DIR, train_data_df):
+def make_tilt_train_generator(train_data_df):
     train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_data_df,
@@ -108,7 +108,7 @@ def make_tilt_train_generator(DATA_DIR, train_data_df):
     )
     return train_generator
 
-def make_pan_train_generator(DATA_DIR, train_data_df):
+def make_pan_train_generator(train_data_df):
     train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_data_df,
@@ -123,7 +123,7 @@ def make_pan_train_generator(DATA_DIR, train_data_df):
     )
     return train_generator
 
-def make_tilt_val_generator(DATA_DIR, val_data_df):
+def make_tilt_val_generator(val_data_df):
     datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     generator = datagen.flow_from_dataframe(
         dataframe=val_data_df,
@@ -138,7 +138,7 @@ def make_tilt_val_generator(DATA_DIR, val_data_df):
     )
     return generator
 
-def make_pan_val_generator(DATA_DIR, val_data_df):
+def make_pan_val_generator(val_data_df):
    datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
    generator = datagen.flow_from_dataframe(
        dataframe=val_data_df,
@@ -153,7 +153,7 @@ def make_pan_val_generator(DATA_DIR, val_data_df):
    )
    return generator
 
-def make_test_generator(DATA_DIR, test_data):
+def make_test_generator(test_data):
     test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255, data_format='channels_last')
     test_generator = test_datagen.flow_from_dataframe(
         dataframe=test_data,
