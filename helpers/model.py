@@ -4,6 +4,8 @@ import tensorflow as tf
 assert tf.__version__[0] == '2'
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
+num_tilt_classes = None
+num_pan_classes = None
 
 class ResidualBlock(tf.keras.layers.Layer):
     # Initialize components of the model
@@ -144,12 +146,13 @@ class BottleneckResidualBlock(tf.keras.layers.Layer):
         })
         return config
 
-def get_resnet_model(class_, filters, block_size, num_tilt_classes, num_pan_classes, reg_lambda=0.0, fdropout=False):
+def get_resnet_model(class_, filters, block_size, reg_lambda=0.0, fdropout=False):
     input = tf.keras.Input(
         shape=(64,64,3)
     )
 
     assert class_ == "tilt" or class_ == "pan"
+    assert num_tilt_classes is not None and num_pan_classes is not None
 
     x = tf.keras.layers.Conv2D(filters=64,
                                    kernel_size=(3, 3),
@@ -180,7 +183,7 @@ def get_resnet_model(class_, filters, block_size, num_tilt_classes, num_pan_clas
 
     return tf.keras.Model(input, output)
 
-def get_bottleneck_resnet_model(class_, filters, block_size, num_tilt_classes, num_pan_classes, reg_lambda=0.0, fdropout=False):
+def get_bottleneck_resnet_model(class_, filters, block_size, reg_lambda=0.0, fdropout=False):
     input = tf.keras.Input(
         shape=(64,64,3)
     )
